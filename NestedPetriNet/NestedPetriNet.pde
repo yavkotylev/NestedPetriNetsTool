@@ -23,7 +23,6 @@ void setup() {
   start = false;
   selectInput("Select a file:", "fileSelected");  
   fileName = null;
-  // setNet();
 }
 void fileSelected(File selection) {
   if (selection == null) {
@@ -42,8 +41,6 @@ float firstY = 0;
 float cornerY = 0.0;
 float cornerX = -0.7;
 ArrayList<ElementNet> elementArray;
-
-
 void draw() {
   clear();
   background(255);
@@ -73,7 +70,6 @@ void drawMessage() {
   fill(255);
 }
 
-
 void mouseMoved() {
   if (start == true && menu != null) {
     if (menu.visible == true) {
@@ -91,7 +87,6 @@ void mouseMoved() {
         }
       }
     } else {
-
       if (mouseX <= 32 && elementArray.size() != 0) {
         menu.visible = true;
       }
@@ -104,9 +99,9 @@ void mouseWheel(MouseEvent event) {
     float e = event.getCount();
     if (mouseX >= 330 || menu.visible == false) {
       if (e >= 1 && scaleOfNet >= 0) {
-        scaleOfNet/=1.02;
+        scaleOfNet /= 1.02;
       } else {
-        scaleOfNet*= 1.02;
+        scaleOfNet *= 1.02;
       }
       scaledMainMaxX = mainMaxX * scaleOfNet;
       scaledMainMaxY = mainMaxY * scaleOfNet;
@@ -133,19 +128,15 @@ void mousePressed() {
       firstX = mouseX;
       firstY = mouseY;
     }
-
     if (mouseButton == LEFT) {
       if (menu.visible == true && mouseX <= 325 && mouseX >= 305 && mouseY <=45 && mouseY >= 25) {
         menu.drawRectangle = !menu.drawRectangle;  
-
         return;
       }
-
       if (menu.visible == false && mouseX >= 0 && mouseX <= 32 && mouseY >= 0 && mouseY <=32 && elementArray.size() != 0) {
         menu.visible = true;
         return;
       }
-
       if (mouseX >= 260 && mouseX <= 275 && menu.visible == true) {
         for (int i = 0; i < menu.elementsMenu.size(); i++) {
           if (menu.elementsMenu.get(i).checkPress (mouseY) == true) {
@@ -153,7 +144,6 @@ void mousePressed() {
           }
         }
       }
-
       if (mouseX >= 300 && mouseX <= 330 && menu.visible == true) {
         if (mouseY >= 70 && mouseY <= 105) {
           menu.up.active = true;
@@ -168,7 +158,6 @@ void mousePressed() {
   } else {
     if (pressOk == false && mouseX >= width/2 -50 && mouseX <= width/2 + 50 && mouseY >= height/2 + 30 && mouseY <= height/2 + 60 ) {
       pressOk = true;
-
       selectInput("Select a file to process:", "fileSelected");
     }
   }
@@ -182,7 +171,7 @@ void mouseReleased() {
 
 
 public class Menu {
-  ArrayList <ElementMenu> elementsMenu;
+  ArrayList<ElementMenu> elementsMenu;
   ElementMenu top;
   ElementMenu low;
   ElementNet activeNet;
@@ -191,13 +180,14 @@ public class Menu {
   Runner runner;
   boolean visible;
   boolean drawRectangle;
+
   public Menu() {
     if (elementArray.size() == 0) {
       return;
     }
     elementsMenu = new ArrayList<ElementMenu>();
     for (int i = 0; i < elementArray.size(); i++) {
-      elementsMenu.add (new ElementMenu(70 + i * 40, elementArray.get(i)));
+      elementsMenu.add(new ElementMenu(70 + i * 40, elementArray.get(i)));
     }
     top = elementsMenu.get(0);
     low = elementsMenu.get(elementsMenu.size() - 1);
@@ -206,66 +196,61 @@ public class Menu {
     runner = new Runner(top.topY, low.lowY);
     visible = true;
   }
+
   void draw() {
     if (visible == false) {
       rect(0, 0, 32, 32);
-      line (3, 8, 29, 8);
-      line (3, 16, 29, 16);
-      line (3, 24, 29, 24);
+      line(3, 8, 29, 8);
+      line(3, 16, 29, 16);
+      line(3, 24, 29, 24);
       return;
     }
     if (up.active == true || down.active == true) {
       scroll(2);
     }
-
     translate(0, 0, 1);
     strokeCap(ROUND);
     if (drawRectangle == true) {
       fill(0, 200, 0);
-      rect (305, 25, 20, 20);
+      rect(305, 25, 20, 20);
     } else {
       noFill();
-      rect (305, 25, 20, 20);
+      rect(305, 25, 20, 20);
     }
     translate(0, 0, -1);
     noFill();
-
-    translate(0, 0, -1);
-    translate(0, 0, 1);
-
-    rect (0, 70, 330, height - 70);
-    rect (300, 70, 30, height - 70);
+    rect(0, 70, 330, height - 70);
+    rect(300, 70, 30, height - 70);
     fill(255);
     for (int i = 0; i < elementsMenu.size(); i++) {
       elementsMenu.get(i).draw();
     }
     strokeWeight(3);
-    rect (0, 0, 330, 70); 
+    rect(0, 0, 330, 70);
     noFill();
-
-    textAlign (CENTER, CENTER);
-    fill (0);
-    textSize (30);
-    text ("Element nets:", 150, 35);     
-    fill (255);
+    textAlign(CENTER, CENTER);
+    fill(0);
+    textSize(30);
+    text("Element nets:", 150, 35);
+    fill(255);
     up.draw();
     down.draw();
     runner.draw();
   }
+
   void disableActiveButton() {
     if (down.active == true) {
-      down.active = false; 
+      down.active = false;
       return;
     }
     if (up.active == true) {
-      up.active = false; 
+      up.active = false;
       return;
     }
   }
 
   void scroll(int speed) {
     if (top.topY < 70 || low.lowY > height) {
-
       if (down.active == true && low.lowY >= height) {
         for (int i = 0; i < elementsMenu.size(); i++) {
           elementsMenu.get(i).pickUp(speed);
@@ -287,12 +272,14 @@ public class Menu {
 public class ElementMenu {
   float topY;
   float lowY;
-  ElementNet net;  
+  ElementNet net;
+
   ElementMenu(float top, ElementNet net) {
     topY = top;
     lowY = top + 40;
     this.net = net;
   }
+
   void pickUp(int i) {
 
     topY -= i;
@@ -300,19 +287,18 @@ public class ElementMenu {
   }
 
   void drop(int i) {
-
     topY += i;
     lowY += i;
   }
-  boolean checkPoint (float y) {
+
+  boolean checkPoint(float y) {
     if (net.visible == false) {
       return false;
     }
     if (y < lowY && y >= topY) {
-      net.highlighted = true;     
-      //menu.activeNet = net;
+      net.highlighted = true;
       return true;
-    } else {      
+    } else {
       if (net.highlighted == true) {
         net.highlighted = false;
       }
@@ -320,9 +306,9 @@ public class ElementMenu {
     }
   }
 
-  boolean checkPress (float y) {
+  boolean checkPress(float y) {
     if (y >= topY + 13 && y <= topY + 28) {
-      net.visible = !net. visible; 
+      net.visible = !net.visible;
       return true;
     }
     return false;
@@ -334,35 +320,31 @@ public class ElementMenu {
       return;
     }
     strokeWeight(1);
-    line(10, lowY, 290, lowY); 
-
+    line(10, lowY, 290, lowY);
     textSize(20);
-    fill (0);
-    textAlign (LEFT, CENTER);
-    text(net.name, 10, (topY + lowY)/2);
+    fill(0);
+    textAlign(LEFT, CENTER);
+    text(net.name, 10, (topY + lowY) / 2);
     if (net.visible == true) {
       fill(net.uniqueColor);
     } else {
       fill(255);
     }
-    if (topY <= 57 && topY >= 42) { 
-      rect (260, 70, 15, topY - 42);
+    if (topY <= 57 && topY >= 42) {
+      rect(260, 70, 15, topY - 42);
       fill(255);
       return;
     }
-
     if (topY < 42) {
       fill(255);
       return;
     }
-
-    rect (260, topY + 13, 15, 15);    
+    rect(260, topY + 13, 15, 15);
     fill(255);
   }
 }
 
 public class Arrow {
-
   float x;
   float y;
   float rectWidth;
@@ -374,33 +356,35 @@ public class Arrow {
   float triangleY2;
   float triangleX3;
   float triangleY3;
-  public Arrow (String str) {
+
+  public Arrow(String str) {
     this.rectWidth = 30;
     this.rectHeight = 35;
     this.x = 300;
     triangleX1 = 305;
     triangleX2 = 315;
     triangleX3 = 325;
-    if (str.equals("up")) {      
-      this.y = 70;    
-      triangleY1 = 98;    
-      triangleY2 = 78;    
+    if (str.equals("up")) {
+      this.y = 70;
+      triangleY1 = 98;
+      triangleY2 = 78;
       triangleY3 = 98;
     }
     if (str.equals("down")) {
-      this.y = height - 35; 
-      triangleY1 = height - 28; 
+      this.y = height - 35;
+      triangleY1 = height - 28;
       triangleY2 = height - 8;
       triangleY3 = height - 28;
     }
   }
+
   void draw() {
     if (this.active == true) {
       fill(210);
     } else {
       fill(255);
     }
-    rect (this.x, this.y, rectWidth, rectHeight);
+    rect(this.x, this.y, rectWidth, rectHeight);
     fill(0);
     triangle(triangleX1, triangleY1, triangleX2, triangleY2, triangleX3, triangleY3);
     fill(255);
@@ -415,12 +399,13 @@ class Runner {
   float numerator;
   float denominator;
   boolean mooving = false;
+
   public Runner(float topY, float lowY) {
     x = 304;
     y = 109;
     runnerWidth = 22;
 
-    if (lowY - topY <= height - 70) {     
+    if (lowY - topY <= height - 70) {
       runnerHeight = height - 39 - y;
       denominator = lowY - topY - runnerHeight;
     } else {
@@ -429,16 +414,16 @@ class Runner {
     }
     numerator = height - 217;
   }
-  void pickUp (int i) {
 
-    y += i * numerator/denominator;
+  void pickUp(int i) {
+    y += i * numerator / denominator;
   }
 
-  void drop (int i) {
-    y -= i * numerator/denominator;
+  void drop(int i) {
+    y -= i * numerator / denominator;
   }
+
   void draw() {
-
     fill(0);
     strokeWeight(1);
     rect(x, y, runnerWidth, runnerHeight);
@@ -450,27 +435,27 @@ class Runner {
 
 
 public class Token {
-  public Token(float y, float diameter, int level, String name, int num, int size) {       
+  public Token(float y, float diameter, int level, String name, int num, int size) {
     this.level = level;
     this.name = name;
     if (size == 1) {
-      this.y = y; 
+      this.y = y;
       this.scaledTokenY = y;
-      this.diameter = diameter/5;
+      this.diameter = diameter / 5;
       this.scaledTokenDiameter = this.diameter;
       return;
     }
     if (size == 2) {
       if (num == 1) {
-        this.y = y - diameter/6;
+        this.y = y - diameter / 6;
         this.scaledTokenY = y;
-        this.diameter = diameter/6;
+        this.diameter = diameter / 6;
         this.scaledTokenDiameter = this.diameter;
       }
       if (num == 2) {
-        this.y = y + diameter/6;
+        this.y = y + diameter / 6;
         this.scaledTokenY = y;
-        this.diameter = diameter/6;
+        this.diameter = diameter / 6;
         this.scaledTokenDiameter = this.diameter;
       }
       return;
@@ -480,6 +465,7 @@ public class Token {
     this.diameter = diameter;
     this.scaledTokenDiameter = this.diameter;
   }
+
   public int level;
   public float x;
   public float y;
@@ -488,9 +474,10 @@ public class Token {
   float scaledTokenY;
   float scaledTokenDiameter;
   String name;
+
   public void changeScale(float scale) {
-    scaledTokenX = this.x * scale - scaledMainMaxX/2;
-    scaledTokenY = this.y * scale - scaledMainMaxY/2;
+    scaledTokenX = this.x * scale - scaledMainMaxX / 2;
+    scaledTokenY = this.y * scale - scaledMainMaxY / 2;
     scaledTokenDiameter = this.diameter * scale;
   }
 }
@@ -499,14 +486,16 @@ public class DeactivateToken extends Token {
   public DeactivateToken(float x, float y, float diameter, int level, String name, int num, int size) {
     super(y, diameter, level, name, num, size);
     if (size == 1 || (size == 2 && (num == 1 || num == 2))) {
-      this.x = x + diameter/4;
+      this.x = x + diameter / 4;
     } else {
       this.x = x;
     }
   }
+
   public void changeScale(float scale) {
     super.changeScale(scale);
   }
+
   public void draw(int number, int size) {
     color c = g.fillColor;
     translate(0, 0, 1 * scaleOfNet);
@@ -520,19 +509,21 @@ public class DeactivateToken extends Token {
 } 
 
 public class ActiveToken extends Token {
-  public ActiveToken(float x, float y, float diameter, int level, int elemLevel, String name, String idElementNet, int num, int size) {
-    super(y, diameter, level, name, num, size);   
+  public ActiveToken(float x, float y, float diameter, int level, String name, String idElementNet, int num, int size) {
+    super(y, diameter, level, name, num, size);
     this.idElementNet = idElementNet;
     if (size == 1 || (size == 2 && (num == 1 || num == 2))) {
-      this.x = x - diameter/4;
+      this.x = x - diameter / 4;
     } else {
       this.x = x;
     }
   }
+
   public void changeScale(float scale) {
     super.changeScale(scale);
     elementNet.changeScale(scale);
   }
+
   public void draw(int number, int size) {
     color c = g.fillColor;
     translate(0, 0, 1 * scaleOfNet);
@@ -544,6 +535,7 @@ public class ActiveToken extends Token {
     translate(0, 0, -1 * scaleOfNet);
     elementNet.draw();
   }
+
   String idElementNet;
   public ElementNet elementNet;
 }
@@ -555,7 +547,7 @@ public class Place {
     this.placeY = y;
     this.placeDiameter = diameter;
     this.level = level;
-    this.placeRadius = diameter/2;
+    this.placeRadius = diameter / 2;
 
     this.scaledPlaceX = this.placeX;
     this.scaledPlaceY = this.placeY;
@@ -582,65 +574,66 @@ public class Place {
   String name;
 
   public void changeScale(float scale) {
-    scaledPlaceX = placeX * scale - scaledMainMaxX/2; 
-    scaledPlaceY = placeY * scale - scaledMainMaxY/2;
+    scaledPlaceX = placeX * scale - scaledMainMaxX / 2;
+    scaledPlaceY = placeY * scale - scaledMainMaxY / 2;
     scaledPlaceRadius = placeRadius * scale;
     scaledPlaceDiameter = placeDiameter * scale;
-    for (int i = 0; i < activeTokens.size(); i++) {      
+    for (int i = 0; i < activeTokens.size(); i++) {
       activeTokens.get(i).changeScale(scale);
     }
   }
+
   public void draw(int level) {
 
     translate(0, 0, distanceBetweenElemntsNet * level * scaleOfNet);
     color c = g.fillColor;
-    ellipse ((scaledPlaceX), (scaledPlaceY), scaledPlaceDiameter, scaledPlaceDiameter);
+    ellipse((scaledPlaceX), (scaledPlaceY), scaledPlaceDiameter, scaledPlaceDiameter);
 
     if (deactivateTokens.size() > 2 || activeTokens.size() > 2) {
       translate(0, 0, 1 * scaleOfNet);
-      line ((scaledPlaceX), (scaledPlaceY + scaledPlaceDiameter/2), (scaledPlaceX), 
-        (scaledPlaceY - scaledPlaceDiameter/2));
+      line((scaledPlaceX), (scaledPlaceY + scaledPlaceDiameter / 2), (scaledPlaceX), 
+        (scaledPlaceY - scaledPlaceDiameter / 2));
       fill(0);
 
       textAlign(CENTER, CENTER);
-      textSize (scaledPlaceRadius / 2);
+      textSize(scaledPlaceRadius / 2);
       if (activeTokens.size() > 2) {
         fill(0);
-        text(activeTokens.size(), (scaledPlaceX - scaledPlaceRadius/2), (scaledPlaceY + scaledPlaceRadius/2));
+        text(activeTokens.size(), (scaledPlaceX - scaledPlaceRadius / 2), (scaledPlaceY + scaledPlaceRadius / 2));
         fill(255);
-        ellipse((scaledPlaceX - scaledPlaceRadius/2), (scaledPlaceY - scaledPlaceRadius/2), 
-          scaledPlaceRadius/3, scaledPlaceRadius/3);
+        ellipse((scaledPlaceX - scaledPlaceRadius / 2), (scaledPlaceY - scaledPlaceRadius / 2), 
+          scaledPlaceRadius / 3, scaledPlaceRadius / 3);
       }
       if (deactivateTokens.size() > 2) {
         fill(0);
-        text(deactivateTokens.size(), (scaledPlaceX + scaledPlaceRadius/2), (scaledPlaceY + scaledPlaceRadius/2));
+        text(deactivateTokens.size(), (scaledPlaceX + scaledPlaceRadius / 2), (scaledPlaceY + scaledPlaceRadius / 2));
         fill(0);
-        ellipse((scaledPlaceX + scaledPlaceRadius/2), (scaledPlaceY - scaledPlaceRadius/2), 
-          scaledPlaceRadius/3, scaledPlaceRadius/3);
+        ellipse((scaledPlaceX + scaledPlaceRadius / 2), (scaledPlaceY - scaledPlaceRadius / 2), 
+          scaledPlaceRadius / 3, scaledPlaceRadius / 3);
       }
       fill(c);
       translate(0, 0, -1 * scaleOfNet);
     }
 
     if (deactivateTokens.size() < 3) {
-      for (int i = 0; i < deactivateTokens.size(); i++) {         
+      for (int i = 0; i < deactivateTokens.size(); i++) {
         deactivateTokens.get(i).draw(i + 1, deactivateTokens.size());
       }
     }
-    for (int i = 0; i < activeTokens.size(); i++) {      
+    for (int i = 0; i < activeTokens.size(); i++) {
       activeTokens.get(i).draw(i + 1, activeTokens.size());
     }
     fill(0);
     translate(0, 0, 0.001);
-    textSize(scaledPlaceDiameter/5);
+    textSize(scaledPlaceDiameter / 5);
     textAlign(CENTER, TOP);
-    text(id, scaledPlaceX, scaledPlaceY + scaledPlaceDiameter/2);
+    text(id, scaledPlaceX, scaledPlaceY + scaledPlaceDiameter / 2);
     fill(c);
     translate(0, 0, -0.001);
     translate(0, 0, -distanceBetweenElemntsNet * level * scaleOfNet);
   }
 
-  void shift (float amendmentX, float amendmentY) {
+  void shift(float amendmentX, float amendmentY) {
     this.placeX += amendmentX;
     this.placeY += amendmentY;
     this.scaledPlaceX = this.placeX * scaleOfNet;
@@ -671,6 +664,7 @@ public class Transition {
     this.scaledTransitionRadiusY = transitionRadiusY;
     this.level = level;
   }
+
   public float transitionX;
   public float transitionY;
   public float transitionRadiusX;
@@ -685,13 +679,13 @@ public class Transition {
   String name;
 
   public void changeScale(float scale) {
-    this.scaledTransitionX = transitionX * scale - scaledMainMaxX/2;
-    this.scaledTransitionY = transitionY * scale - scaledMainMaxY/2;
+    this.scaledTransitionX = transitionX * scale - scaledMainMaxX / 2;
+    this.scaledTransitionY = transitionY * scale - scaledMainMaxY / 2;
     this.scaledTransitionRadiusX = transitionRadiusX * scale;
     this.scaledTransitionRadiusY = transitionRadiusY * scale;
   }
 
-  void shift (float amendmentX, float amendmentY) {
+  void shift(float amendmentX, float amendmentY) {
     this.transitionX += amendmentX;
     this.transitionY += amendmentY;
     this.changeScale(scaleOfNet);
@@ -725,12 +719,14 @@ public class ElementNet {
     highlighted = false;
     name = "Name of this net: " + (elementArray.size() + 1);
     visible = false;
-    uniqueColor = color(random (0, 255), random (0, 255), random (0, 255));
+    uniqueColor = color(random(0, 255), random(0, 255), random(0, 255));
   }
+
   Transition beginTr;
   Place beginPl;
   Transition endTr;
   Place endPl;
+
   private float getBeginX() {
     if (beginPl != null) {
       return beginPl.scaledPlaceX;
@@ -740,21 +736,13 @@ public class ElementNet {
     }
     return 0.0;
   }
+
   private float getBeginY() {
     if (beginPl != null) {
       return beginPl.scaledPlaceY;
     }
     if (beginTr != null) {
       return beginTr.scaledTransitionY;
-    }
-    return 0.0;
-  }
-  private float getBeginDistance() {
-    if (beginPl != null) {
-      return beginPl.placeRadius;
-    }
-    if (beginTr != null) {
-      return beginTr.transitionRadiusX;
     }
     return 0.0;
   }
@@ -768,6 +756,7 @@ public class ElementNet {
     }
     return 0.0;
   }
+
   private float getEndY() {
     if (endPl != null) {
       return endPl.scaledPlaceY;
@@ -777,6 +766,7 @@ public class ElementNet {
     }
     return 0.0;
   }
+
   private float getEndDistance() {
     if (endPl != null) {
       return endPl.scaledPlaceRadius;
@@ -786,12 +776,13 @@ public class ElementNet {
     }
     return 0.0;
   }
+
   public color uniqueColor;
   public boolean highlighted;
   public boolean visible;
   public int level;
   public ActiveToken token;
-  public ArrayList<Transition> transitions; 
+  public ArrayList<Transition> transitions;
   public ArrayList<Arc> arcs;
   public ArrayList<Place> places;
   public String name;
@@ -799,6 +790,7 @@ public class ElementNet {
   float diameterY;
   float rectX;
   float rectY;
+
   public void changeScale(float scale) {
     for (int i = 0; i < transitions.size(); i++) {
       transitions.get(i).changeScale(scale);
@@ -807,12 +799,13 @@ public class ElementNet {
       places.get(i).changeScale(scale);
     }
   }
+
   public void draw() {
     if (visible == true) {
       if (highlighted == true) {
         stroke(uniqueColor);
         fill(uniqueColor);
-      } else {      
+      } else {
         fill(240);
       }
       line(token.scaledTokenX, token.scaledTokenY, token.level * distanceBetweenElemntsNet * scaleOfNet, 
@@ -832,12 +825,13 @@ public class ElementNet {
       fill(255);
       if (menu.drawRectangle == true) {
         translate(0, 0, -1 + level * scaleOfNet * distanceBetweenElemntsNet);
-        rect((rectX - 50 - mainMaxX/2) * scaleOfNet, (rectY - 50 - mainMaxY/2) * scaleOfNet, (diameterX + 100) * scaleOfNet, (diameterY + 50) * scaleOfNet);
+        rect((rectX - 50 - mainMaxX / 2) * scaleOfNet, (rectY - 50 - mainMaxY / 2) * scaleOfNet, (diameterX + 100) * scaleOfNet, (diameterY + 50) * scaleOfNet);
         translate(0, 0, 1 - level * scaleOfNet * distanceBetweenElemntsNet);
       }
       stroke(0);
     }
   }
+
   void shift() {
     float tokenX = token.x;
     float tokenY = token.y;
@@ -879,8 +873,8 @@ public class ElementNet {
     }
     diameterX = maxX1 - minX1 + 70;
     diameterY = maxY1 - minY1 + 70;
-    float amendmentX = tokenX - (maxX1 + minX1)/2;
-    float amendmentY = tokenY - (maxY1 + minY1)/2;
+    float amendmentX = tokenX - (maxX1 + minX1) / 2;
+    float amendmentY = tokenY - (maxY1 + minY1) / 2;
     rectX = amendmentX;
     rectY = amendmentY;
     for (int i = 0; i < transitions.size(); i++) {
@@ -893,12 +887,12 @@ public class ElementNet {
 }
 
 public class Arc {
-  public Arc( Place pl, Transition tr) {
+  public Arc(Place pl, Transition tr) {
     trans = tr;
     place = pl;
     level = pl.level;
     coordinateZ = level * distanceBetweenElemntsNet;
-  }  
+  }
 
   public Transition trans;
   public Place place;
@@ -922,19 +916,19 @@ public class Arc {
       float y1 = place.scaledPlaceY;
       float x0 = place.scaledPlaceX;
       float y0 = (place.scaledPlaceY + place.scaledPlaceRadius);
-      float beginHeadSize = place.scaledPlaceDiameter/15;
+      float beginHeadSize = place.scaledPlaceDiameter / 15;
       PVector d = new PVector(x1 - x0, y1 - y0);
       d.normalize();
       float coeff = 3.0;
-      strokeCap(SQUARE);  
-      float angle = atan2(d.y, d.x);  
+      strokeCap(SQUARE);
+      float angle = atan2(d.y, d.x);
       // begin head
       fill(0);
       pushMatrix();
       translate(x0, y0, 0.00001);
-      rotate(angle + PI/180 * 47);
-      triangle(-beginHeadSize*coeff, -beginHeadSize, 
-        -beginHeadSize*coeff, beginHeadSize, 
+      rotate(angle + PI / 180 * 47);
+      triangle(-beginHeadSize * coeff, -beginHeadSize, 
+        -beginHeadSize * coeff, beginHeadSize, 
         0, 0);
       popMatrix();
       strokeWeight(1.2 * sqrt(scaleOfNet / 2));
@@ -943,8 +937,8 @@ public class Arc {
       translate(0, 0, -i * scaleOfNet * distanceBetweenElemntsNet);
       return;
     }
-    float rectX = - place.scaledPlaceX + trans.scaledTransitionX;
-    float rectY = - place.scaledPlaceY + trans.scaledTransitionY;
+    float rectX = -place.scaledPlaceX + trans.scaledTransitionX;
+    float rectY = -place.scaledPlaceY + trans.scaledTransitionY;
     float circleX = 0;
     float circleY = 0;
     //rext on the left of ellipse
@@ -952,31 +946,31 @@ public class Arc {
       rectX += trans.scaledTransitionRadiusX;
     }
 
-    rectY += trans.scaledTransitionRadiusY/2;
+    rectY += trans.scaledTransitionRadiusY / 2;
     float hypotenuse = sqrt((rectX * rectX) + (rectY * rectY));
-    float sine = rectY/hypotenuse;
-    float cosine = rectX/hypotenuse;
+    float sine = rectY / hypotenuse;
+    float cosine = rectX / hypotenuse;
     circleX = place.scaledPlaceX + cosine * place.scaledPlaceRadius;
     circleY = place.scaledPlaceY + sine * place.scaledPlaceRadius;
 
     translate(0, 0, i * scaleOfNet * distanceBetweenElemntsNet);
-    line ((rectX + place.scaledPlaceX), (rectY + place.scaledPlaceY), (circleX), 
+    line((rectX + place.scaledPlaceX), (rectY + place.scaledPlaceY), (circleX), 
       circleY);
     if (target.equals(trans.id) && source.equals(place.id)) {
       drawArrow((rectX + place.scaledPlaceX), (rectY + place.scaledPlaceY), circleX, 
-        (circleY), place.scaledPlaceDiameter/15, 0, true);
+        (circleY), place.scaledPlaceDiameter / 15, 0, true);
     }
     if (target.equals(place.id) && source.equals(trans.id)) {
       drawArrow((rectX + place.scaledPlaceX), (rectY + place.scaledPlaceY), circleX, 
-        circleY, 0, place.scaledPlaceDiameter/15, true);
+        circleY, 0, place.scaledPlaceDiameter / 15, true);
     }
     textAlign(CENTER, TOP);
-    textSize(place.scaledPlaceDiameter/5);
+    textSize(place.scaledPlaceDiameter / 5);
     color c = g.fillColor;
     fill(0);
-    rectY += trans.scaledTransitionRadiusY/2;
-    text(name, (rectX + place.scaledPlaceX + circleX)/2, (rectY + place.scaledPlaceY +circleY) /2);
-    fill(c); 
+    rectY += trans.scaledTransitionRadiusY / 2;
+    text(name, (rectX + place.scaledPlaceX + circleX) / 2, (rectY + place.scaledPlaceY + circleY) / 2);
+    fill(c);
     translate(0, 0, -i * scaleOfNet * distanceBetweenElemntsNet);
   }
 
@@ -984,7 +978,6 @@ public class Arc {
     PVector d = new PVector(x1 - x0, y1 - y0);
     d.normalize();
     float coeff = 5.0;
-    //strokeWeight(2 * sqrt(m/2));
     strokeCap(SQUARE);
     float angle = atan2(d.y, d.x);
     if (filled) {
@@ -992,17 +985,17 @@ public class Arc {
       fill(0);
       pushMatrix();
       translate(x0, y0, 0.00001);
-      rotate(angle+PI);
-      triangle(-beginHeadSize*coeff, -beginHeadSize, 
-        -beginHeadSize*coeff, beginHeadSize, 
+      rotate(angle + PI);
+      triangle(-beginHeadSize * coeff, -beginHeadSize, 
+        -beginHeadSize * coeff, beginHeadSize, 
         0, 0);
       popMatrix();
       // end head
       pushMatrix();
       translate(x1, y1, 0.00001);
       rotate(angle);
-      triangle(-endHeadSize*coeff, -endHeadSize, 
-        -endHeadSize*coeff, endHeadSize, 
+      triangle(-endHeadSize * coeff, -endHeadSize, 
+        -endHeadSize * coeff, endHeadSize, 
         0, 0);
       popMatrix();
       fill(255);
@@ -1010,18 +1003,18 @@ public class Arc {
       // begin head
       pushMatrix();
       translate(x0, y0);
-      rotate(angle+PI);
+      rotate(angle + PI);
       strokeCap(ROUND);
-      line(-beginHeadSize*coeff, -beginHeadSize, 0, 0);
-      line(-beginHeadSize*coeff, beginHeadSize, 0, 0);
+      line(-beginHeadSize * coeff, -beginHeadSize, 0, 0);
+      line(-beginHeadSize * coeff, beginHeadSize, 0, 0);
       popMatrix();
       // end head
       pushMatrix();
       translate(x1, y1);
       rotate(angle);
       strokeCap(ROUND);
-      line(-endHeadSize*coeff, -endHeadSize, 0, 0);
-      line(-endHeadSize*coeff, endHeadSize, 0, 0);
+      line(-endHeadSize * coeff, -endHeadSize, 0, 0);
+      line(-endHeadSize * coeff, endHeadSize, 0, 0);
       popMatrix();
     }
     strokeWeight(1.2 * sqrt(scaleOfNet / 2));
@@ -1031,12 +1024,13 @@ public class Arc {
 public class Net {
   public Net() {
     places = new ArrayList<Place>();
-    transitions = new ArrayList<Transition>();     
+    transitions = new ArrayList<Transition>();
     arcs = new ArrayList<Arc>();
   }
+
   String name;
   public ArrayList<Place> places;
-  public ArrayList<Transition> transitions; 
+  public ArrayList<Transition> transitions;
   public ArrayList<Arc> arcs;
 
   public void scaleChanged(float scale) {
@@ -1052,9 +1046,9 @@ public class Net {
   public void draw() {
     if (mousePressed) {
       if (mouseButton == LEFT) {
-        if ((mouseX > 330 && firstX > 330) ||menu.visible == false) {
-          mainX += (- firstX + mouseX);
-          mainY += (- firstY + mouseY);
+        if ((mouseX > 330 && firstX > 330) || menu.visible == false) {
+          mainX += (-firstX + mouseX);
+          mainY += (-firstY + mouseY);
           firstX = mouseX;
           firstY = mouseY;
         }
@@ -1065,27 +1059,25 @@ public class Net {
       }
     }
 
-    if (keyPressed) {  
+    if (keyPressed) {
       if (key == CODED) {
         if (keyCode == RIGHT) {
-          cornerY+=-0.01;
+          cornerY += -0.01;
         }
         if (keyCode == LEFT) {
-          cornerY+=0.01;
+          cornerY += 0.01;
         }
-
         if (keyCode == UP) {
-          cornerX+=-0.01;
+          cornerX += -0.01;
         }
-
         if (keyCode == DOWN) {
-          cornerX+=0.01;
+          cornerX += 0.01;
         }
       }
     }
     strokeWeight(1.2 * sqrt(scaleOfNet / 2));
     translate(mainX, mainY, 0);
-    rotateY(-cornerY); 
+    rotateY(-cornerY);
     rotateX(-cornerX);
     for (int i = 0; i < places.size(); i++) {
       places.get(i).draw(0);
@@ -1107,15 +1099,15 @@ public class Net {
 }
 
 
-public void setNet(String selection) {  
-  elementArray = new ArrayList<ElementNet>();  
+public void setNet(String selection) {
+  elementArray = new ArrayList<ElementNet>();
   net = new Net();
   XML xml = null;
   try {
     xml = loadXML(selection);
     start = true;
-  }
-  catch(Exception e) {
+  } 
+  catch (Exception e) {
     start = false;
     pressOk = false;
     errorMessage = "Error!\nWrong way!";
@@ -1124,7 +1116,6 @@ public void setNet(String selection) {
   //Load main net
   XML[] nets = null;
   try {
-
     nets = xml.getChildren("net");
     net.name = nets[0].getChildren("name")[0].getChildren("text")[0].getContent();
     //Load places
@@ -1136,11 +1127,11 @@ public void setNet(String selection) {
       try {
         name = places[i].getChildren("name")[0].getChildren("text")[0].getContent();
       } 
-      catch(Exception e) {
+      catch (Exception e) {
         name = null;
       }
       float x = places[i].getChildren("graphics")[0].getChildren("position")[0].getFloat("x");
-      float y= places[i].getChildren("graphics")[0].getChildren("position")[0].getFloat("y");   
+      float y = places[i].getChildren("graphics")[0].getChildren("position")[0].getFloat("y");
       float dimensionX = places[i].getChildren("graphics")[0].getChildren("dimension")[0].getFloat("x");
       //float dimensionY= places[i].getChildren("graphics")[0].getChildren("dimension")[0].getFloat("y");
       Place place = new Place(x, y, dimensionX, 0);
@@ -1161,7 +1152,7 @@ public void setNet(String selection) {
       }
       for (int j = 0; j < markings.length; j++) {
         if (markings[j].getString("type").equals("active")) {
-          ActiveToken t = new ActiveToken (place.placeX, place.placeY, place.placeDiameter, 0, 0, 
+          ActiveToken t = new ActiveToken(place.placeX, place.placeY, place.placeDiameter, 0, 
             markings[j].getChildren("text")[0].getContent(), markings[j].getChildren("elementNet")[0].getContent(), ++numActive, sizeActive);
           place.activeTokens.add(t);
         }
@@ -1176,13 +1167,13 @@ public void setNet(String selection) {
     //load transitions
     XML[] transitions = null;
     transitions = nets[0].getChildren("transition");
-    for (int i = 0; i < transitions.length; i ++) {
+    for (int i = 0; i < transitions.length; i++) {
       String id = transitions[i].getString("id");
       String name;
       try {
         name = transitions[i].getChildren("name")[0].getChildren("text")[0].getContent();
       } 
-      catch(Exception e) {
+      catch (Exception e) {
         name = null;
       }
       float x = transitions[i].getChildren("graphics")[0].getChildren("position")[0].getFloat("x");
@@ -1214,7 +1205,7 @@ public void setNet(String selection) {
 
       for (int j = 0; j < net.transitions.size(); j++) {
         if (target.equals(net.transitions.get(j).id) || source.equals(net.transitions.get(j).id)) {
-          tr =  net.transitions.get(j);
+          tr = net.transitions.get(j);
         }
       }
       Arc arc = new Arc(pl, tr);
@@ -1230,7 +1221,7 @@ public void setNet(String selection) {
     XML[] elementNets = null;
     elementNets = xml.getChildren("elementNet");
     for (int i = 0; i < elementNets.length; i++) {
-      String id =  elementNets[i].getString("id");
+      String id = elementNets[i].getString("id");
       ElementNet elem = null;
       for (int j = 0; j < net.places.size(); j++) {
         for (int k = 0; k < net.places.get(j).activeTokens.size(); k++) {
@@ -1252,11 +1243,11 @@ public void setNet(String selection) {
         try {
           nameElement = placesElement[q].getChildren("name")[0].getChildren("text")[0].getContent();
         } 
-        catch(Exception e) {
+        catch (Exception e) {
           nameElement = null;
         }
         float xElement = placesElement[q].getChildren("graphics")[0].getChildren("position")[0].getFloat("x");
-        float yElement= placesElement[q].getChildren("graphics")[0].getChildren("position")[0].getFloat("y");   
+        float yElement = placesElement[q].getChildren("graphics")[0].getChildren("position")[0].getFloat("y");
         float dimensionXElement = placesElement[q].getChildren("graphics")[0].getChildren("dimension")[0].getFloat("x");
         float dimensionYElement = placesElement[q].getChildren("graphics")[0].getChildren("dimension")[0].getFloat("y");
         Place placeElement = new Place(xElement, yElement, dimensionXElement, 0);
@@ -1278,14 +1269,14 @@ public void setNet(String selection) {
         for (int j = 0; j < markingsElement.length; j++) {
           if (markingsElement[j].getString("type").equals("active")) {
             sizeActiveElement++;
-          }         
+          }
           if (markingsElement[j].getString("type").equals("deactivate")) {
             sizeDeactivateElement++;
           }
         }
         for (int j = 0; j < markingsElement.length; j++) {
           if (markingsElement[j].getString("type").equals("active")) {
-            ActiveToken tElement = new ActiveToken (placeElement.placeX, placeElement.placeY, placeElement.placeDiameter, 0, 0, 
+            ActiveToken tElement = new ActiveToken(placeElement.placeX, placeElement.placeY, placeElement.placeDiameter, 0, 
               markingsElement[j].getChildren("text")[0].getContent(), markingsElement[j].getChildren("elementNet")[0].getContent(), 
               ++numActiveElement, sizeActiveElement);
             placeElement.activeTokens.add(tElement);
@@ -1301,14 +1292,14 @@ public void setNet(String selection) {
 
         //load transitions
         XML[] transitionsElement = elementNets[i].getChildren("transition");
-        for (int q = 0; q < transitionsElement.length; q ++) {
+        for (int q = 0; q < transitionsElement.length; q++) {
           try {
             String idElement = transitionsElement[q].getString("id");
             String nameElement;
             try {
               nameElement = transitionsElement[q].getChildren("name")[0].getChildren("text")[0].getContent();
-            }
-            catch(Exception e) {
+            } 
+            catch (Exception e) {
               nameElement = null;
             }
 
@@ -1336,7 +1327,7 @@ public void setNet(String selection) {
           }
         }
       } 
-      catch(Exception e) {
+      catch (Exception e) {
         start = false;
         pressOk = false;
         errorMessage = "Error!\nDamaged file!";
@@ -1358,7 +1349,7 @@ public void setNet(String selection) {
         }
         for (int j = 0; j < elem.transitions.size(); j++) {
           if (targetElement.equals(elem.transitions.get(j).id) || sourceElement.equals(elem.transitions.get(j).id)) {
-            trElement =  elem.transitions.get(j);
+            trElement = elem.transitions.get(j);
           }
         }
         Arc arcElement = new Arc(plElement, trElement);
