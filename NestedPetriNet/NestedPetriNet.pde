@@ -1,6 +1,6 @@
 import processing.opengl.*;
 
-Net net;
+Net mainNet;
 Menu menu;
 float mainMaxX;
 float mainMaxY;
@@ -52,7 +52,7 @@ void draw() {
     menu.draw();
     fill(255);
     translate ((width + 330)/2, height/2, 0); 
-    net.draw();
+    mainNet.draw();
     translate (-(width + 330)/2, -height/2, 0);
   }
 }
@@ -105,7 +105,7 @@ void mouseWheel(MouseEvent event) {
       }
       scaledMainMaxX = mainMaxX * scaleOfNet;
       scaledMainMaxY = mainMaxY * scaleOfNet;
-      net.scaleChanged(scaleOfNet);
+      mainNet.scaleChanged(scaleOfNet);
     }
     if (mouseX < 330 && menu.visible == true) {
       if (e >= 1) {
@@ -1101,7 +1101,7 @@ public class Net {
 
 public void setNet(String selection) {
   elementArray = new ArrayList<ElementNet>();
-  net = new Net();
+  mainNet = new Net();
   XML xml = null;
   try {
     xml = loadXML(selection);
@@ -1117,7 +1117,7 @@ public void setNet(String selection) {
   XML[] nets = null;
   try {
     nets = xml.getChildren("net");
-    net.name = nets[0].getChildren("name")[0].getChildren("text")[0].getContent();
+    mainNet.name = nets[0].getChildren("name")[0].getChildren("text")[0].getContent();
     //Load places
     XML[] places = null;
     places = nets[0].getChildren("place");
@@ -1161,7 +1161,7 @@ public void setNet(String selection) {
             markings[j].getChildren("text")[0].getContent(), ++numDeactivate, sizeDeactivate));
         }
       }
-      net.places.add(place);
+      mainNet.places.add(place);
     }
 
     //load transitions
@@ -1183,7 +1183,7 @@ public void setNet(String selection) {
       Transition transition = new Transition(x, y, radiusX, radiusY, 0);
       transition.id = id;
       transition.name = name;
-      net.transitions.add(transition);
+      mainNet.transitions.add(transition);
     }
 
     //load arcs
@@ -1197,15 +1197,15 @@ public void setNet(String selection) {
       String type = arcs[i].getChildren("arctype")[0].getChildren("text")[0].getContent();
       Transition tr = null;
       Place pl = null;
-      for (int j = 0; j < net.places.size(); j++) {
-        if (target.equals(net.places.get(j).id) || source.equals(net.places.get(j).id)) {
-          pl = net.places.get(j);
+      for (int j = 0; j < mainNet.places.size(); j++) {
+        if (target.equals(mainNet.places.get(j).id) || source.equals(mainNet.places.get(j).id)) {
+          pl = mainNet.places.get(j);
         }
       }
 
-      for (int j = 0; j < net.transitions.size(); j++) {
-        if (target.equals(net.transitions.get(j).id) || source.equals(net.transitions.get(j).id)) {
-          tr = net.transitions.get(j);
+      for (int j = 0; j < mainNet.transitions.size(); j++) {
+        if (target.equals(mainNet.transitions.get(j).id) || source.equals(mainNet.transitions.get(j).id)) {
+          tr = mainNet.transitions.get(j);
         }
       }
       Arc arc = new Arc(pl, tr);
@@ -1214,7 +1214,7 @@ public void setNet(String selection) {
       arc.name = name;
       arc.type = type;
       arc.id = id;
-      net.arcs.add(arc);
+      mainNet.arcs.add(arc);
     }
 
     //load elementnets
@@ -1223,13 +1223,13 @@ public void setNet(String selection) {
     for (int i = 0; i < elementNets.length; i++) {
       String id = elementNets[i].getString("id");
       ElementNet elem = null;
-      for (int j = 0; j < net.places.size(); j++) {
-        for (int k = 0; k < net.places.get(j).activeTokens.size(); k++) {
-          if (net.places.get(j).activeTokens.get(k).idElementNet.equals(id)) {
-            elem = new ElementNet(net.places.get(j).activeTokens.get(k), elementArray.size() + 1);
+      for (int j = 0; j < mainNet.places.size(); j++) {
+        for (int k = 0; k < mainNet.places.get(j).activeTokens.size(); k++) {
+          if (mainNet.places.get(j).activeTokens.get(k).idElementNet.equals(id)) {
+            elem = new ElementNet(mainNet.places.get(j).activeTokens.get(k), elementArray.size() + 1);
             elem.name = elementNets[i].getChildren("name")[0].getChildren("text")[0].getContent();
             elementArray.add(elem);
-            net.places.get(j).activeTokens.get(k).elementNet = elem;
+            mainNet.places.get(j).activeTokens.get(k).elementNet = elem;
             break;
           }
         }
@@ -1370,40 +1370,40 @@ public void setNet(String selection) {
   }
   mainMaxX = 0;
   mainMaxY = 0;
-  mainMinX = net.transitions.get(0).transitionX;
-  mainMinY = net.transitions.get(0).transitionY;
-  for (int i = 0; i < net.transitions.size(); i++) {
-    if (net.transitions.get(i).transitionX > mainMaxX) {
-      mainMaxX = net.transitions.get(i).transitionX;
+  mainMinX = mainNet.transitions.get(0).transitionX;
+  mainMinY = mainNet.transitions.get(0).transitionY;
+  for (int i = 0; i < mainNet.transitions.size(); i++) {
+    if (mainNet.transitions.get(i).transitionX > mainMaxX) {
+      mainMaxX = mainNet.transitions.get(i).transitionX;
     }
-    if (net.transitions.get(i).transitionY > mainMaxY) {
-      mainMaxY = net.transitions.get(i).transitionY;
+    if (mainNet.transitions.get(i).transitionY > mainMaxY) {
+      mainMaxY = mainNet.transitions.get(i).transitionY;
     }
-    if (net.transitions.get(i).transitionX < mainMinX) {
-      mainMinX = net.transitions.get(i).transitionX;
+    if (mainNet.transitions.get(i).transitionX < mainMinX) {
+      mainMinX = mainNet.transitions.get(i).transitionX;
     }
-    if (net.transitions.get(i).transitionY < mainMinY) {
-      mainMinY = net.transitions.get(i).transitionY;
+    if (mainNet.transitions.get(i).transitionY < mainMinY) {
+      mainMinY = mainNet.transitions.get(i).transitionY;
     }
   }
-  for (int i = 0; i < net.places.size(); i++) {
-    if (net.places.get(i).placeY > mainMaxY) {
-      mainMaxY = net.places.get(i).placeY;
+  for (int i = 0; i < mainNet.places.size(); i++) {
+    if (mainNet.places.get(i).placeY > mainMaxY) {
+      mainMaxY = mainNet.places.get(i).placeY;
     }
-    if (net.places.get(i).placeX > mainMaxX) {
-      mainMaxX = net.places.get(i).placeX;
+    if (mainNet.places.get(i).placeX > mainMaxX) {
+      mainMaxX = mainNet.places.get(i).placeX;
     }
-    if (net.places.get(i).placeY < mainMinY) {
-      mainMinY = net.places.get(i).placeY;
+    if (mainNet.places.get(i).placeY < mainMinY) {
+      mainMinY = mainNet.places.get(i).placeY;
     }
-    if (net.places.get(i).placeX < mainMinX) {
-      mainMinX = net.places.get(i).placeX;
+    if (mainNet.places.get(i).placeX < mainMinX) {
+      mainMinX = mainNet.places.get(i).placeX;
     }
   }
   mainMaxX = mainMaxX + mainMinX;
   mainMaxY = mainMaxY + mainMinY;
   scaledMainMaxX = mainMaxX;
   scaledMainMaxY = mainMaxY;
-  net.scaleChanged(scaleOfNet);
+  mainNet.scaleChanged(scaleOfNet);
   menu = new Menu();
 }
